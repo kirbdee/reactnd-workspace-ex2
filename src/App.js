@@ -109,19 +109,18 @@ const setObjAs = (obj) => (key) => obj[key];
 const getUserWithID = setObjAs(users);
 const getMovieWithID = setObjAs(movies);
 
-const mapProfileWith = (users,movies) => (likedMovies,profile) => {
+const mapProfile = (likedMovies,profile) => {
 	likedMovies[profile.favoriteMovieID] = 	likedMovies[profile.favoriteMovieID] || {
     	movieName: getName(getMovieWithID(profile.favoriteMovieID)),
       	likes: []
     };
 	likedMovies[profile.favoriteMovieID]['likes'].push(getName(getUserWithID(profile.userID)));
-  	return likedMovies;
+	return likedMovies;
 };
 
+//returns a Map of Movies and its Likes
 const mappedMovies = (profiler) => profiles.reduce(profiler,{});
-
-console.log('Profiles',mappedMovies(mapProfileWith(users,movies)));
-
+const moviesLiked = mappedMovies(mapProfile);
 class App extends Component {
   render() {
     return (
@@ -131,7 +130,7 @@ class App extends Component {
           <h1 className="App-title">ReactND - Coding Practice</h1>
         </header>
         <h2>How Popular is Your Favorite Movie?</h2>
-      	<Movies movies/>
+      	<Movies movies={moviesLiked}/>
       </div>
     );
   }
