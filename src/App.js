@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
-
+import Movies from './Movies';
 /*
 Display a list of movies where each movie contains a list of users that favorited it.
 
@@ -96,6 +96,31 @@ const movies = {
     name: 'Get Out',
   },
 };
+/*
+	{
+    	"Some Movie": {
+			likesBy: [..names]
+		}
+    }
+*/
+const getName = (obj = {}) => obj.name || '';
+const setObjAs = (obj) => (key) => obj[key];
+
+const getUserWithID = setObjAs(users);
+const getMovieWithID = setObjAs(movies);
+
+const mapProfileWith = (users,movies) => (likedMovies,profile) => {
+	likedMovies[profile.favoriteMovieID] = 	likedMovies[profile.favoriteMovieID] || {
+    	movieName: getName(getMovieWithID(profile.favoriteMovieID)),
+      	likes: []
+    };
+	likedMovies[profile.favoriteMovieID]['likes'].push(getName(getUserWithID(profile.userID)));
+  	return likedMovies;
+};
+
+const mappedMovies = (profiler) => profiles.reduce(profiler,{});
+
+console.log('Profiles',mappedMovies(mapProfileWith(users,movies)));
 
 class App extends Component {
   render() {
@@ -106,6 +131,7 @@ class App extends Component {
           <h1 className="App-title">ReactND - Coding Practice</h1>
         </header>
         <h2>How Popular is Your Favorite Movie?</h2>
+      	<Movies movies/>
       </div>
     );
   }
